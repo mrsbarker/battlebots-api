@@ -32,7 +32,7 @@ class Robot(Base):
     robot_key: Mapped[str]
     robot: Mapped[str]
     year_id: Mapped[int] = mapped_column(ForeignKey("seasons.id"))
-    type: Mapped[int] = mapped_column(nullable=True)
+    type: Mapped[str] = mapped_column(nullable=True)
     UniqueConstraint("robot", "year_id", name="uniq1")
 
 class Team(Base):
@@ -158,7 +158,7 @@ def populate_stats(session:Session)->None:
                 
 # create database
 def createDB()->None:
-    print(os.getenv("DB_URI"))
+    #print(os.getenv("DB_URI"))
     
     engine = create_engine("postgresql://battlebots_user:dPXnx39QSLYTCVEJReQSt4B75BzctaDK@dpg-d2ubicvfte5s73b0tebg-a/battlebots")
     Base.metadata.create_all(engine)
@@ -168,7 +168,7 @@ def createDB()->None:
         populate_stats(session)       
 
 
-createDB()
+#createDB()
 
 
 
