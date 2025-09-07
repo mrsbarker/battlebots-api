@@ -167,7 +167,7 @@ def createDB()->None:
         populate_robotinfo(session)
         populate_stats(session)       
 
-if "battlebots.db" not in os.listdir("instance/"):
+if "battlebots.db" not in os.listdir("bts/instance/"):
     createDB()
 
 
