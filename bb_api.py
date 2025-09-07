@@ -13,9 +13,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI")
 # initialize the app with the extension
 db.init_app(app)
 
-@app.route("/")
-def home():
-    return render_template("index.html")
 
 @app.route("/random")
 def get_random():
