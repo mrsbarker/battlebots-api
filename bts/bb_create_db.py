@@ -2,7 +2,7 @@ from sqlalchemy import ForeignKey, UniqueConstraint, create_engine, select
 import os
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 from json import dump, loads
-from bb_scrape import main
+from bts.bb_scrape import main
 
 # declare global variables
 if os.listdir("bts/json") == []:

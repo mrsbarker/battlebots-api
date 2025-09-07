@@ -1,6 +1,6 @@
 
 from flask_sqlalchemy import SQLAlchemy
-from bb_create_db import Robot, Season, Team, Stat
+from bts.bb_create_db import Robot, Season, Team, Stat
 from flask import Flask, jsonify, request
 from random import choice
 
