@@ -8,7 +8,7 @@ db = SQLAlchemy()
 app = Flask(__name__)
 
 # configure the SQLite database, relative to the app instance folder
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DB_URI")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DB_URI")
 
 # initialize the app with the extension
 db.init_app(app)
