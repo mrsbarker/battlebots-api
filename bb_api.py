@@ -1,3 +1,4 @@
+import os
 from flask_sqlalchemy import SQLAlchemy
 from bts.bb_create_db import Robot, Season, Team, Stat
 from flask import Flask, jsonify, render_template, request
@@ -7,7 +8,7 @@ db = SQLAlchemy()
 app = Flask(__name__)
 
 # configure the SQLite database, relative to the app instance folder
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///battlebots.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DB_URI")
 
 # initialize the app with the extension
 db.init_app(app)
@@ -84,4 +85,4 @@ def find_bots():
         return jsonify(error = res), 404
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
