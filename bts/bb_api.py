@@ -1,7 +1,7 @@
-import os
+
 from flask_sqlalchemy import SQLAlchemy
-from bb_create_db import Robot, Season, Team, Stat, createDB
-from flask import Flask, jsonify, render_template, request
+from bb_create_db import Robot, Season, Team, Stat
+from flask import Flask, jsonify, request
 from random import choice
 
 
