@@ -1,8 +1,9 @@
-from sqlalchemy import ForeignKey, UniqueConstraint, create_engine, select
 import os
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
+from sqlalchemy import create_engine, select
+from sqlalchemy.orm import Session
 from json import dump, loads
 from bts.bb_scrape import main
+from dbmodels import Base, Season, Robot, Team, Stat
 
 # declare global variables
 if os.listdir("bts/json") == []:
@@ -22,48 +23,7 @@ SEASONS_YEARS = [
     (3, 2018),
     (4, 2019),
     (5, 2020),
-    (6, 2021)]
-
-# establish database classes
-class Base(DeclarativeBase):
-    pass
-
-class Robot(Base):
-    __tablename__ = "robots"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    robot_key: Mapped[str]
-    robot: Mapped[str]
-    year_id: Mapped[int] = mapped_column(ForeignKey("seasons.id"))
-    type: Mapped[str] = mapped_column(nullable=True)
-    UniqueConstraint("robot", "year_id", name="uniq1")
-
-class Team(Base):
-    __tablename__ = "teams"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    robot_id: Mapped[str] = mapped_column(ForeignKey("robots.id"))
-    #builder: Mapped[str]
-    team: Mapped[str]
-    members: Mapped[str]
-    hometown: Mapped[str]
-
-class Season(Base):
-    __tablename__ = "seasons"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    season: Mapped[int] = mapped_column(unique=True)
-    year: Mapped[int] = mapped_column(unique=True)
-
-class Stat(Base):
-    __tablename__ = "stats"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    robot_id: Mapped[int] = mapped_column(ForeignKey("robots.id"))
-    matches: Mapped[str]
-    wins: Mapped[str] 
-    losses: Mapped[str]
-    knockouts: Mapped[str]
-    avg_ko_time: Mapped[str]
-    knocked_out: Mapped[str]
-    judged_win: Mapped[str]
-         
+    (6, 2021)]      
 
 def clean_key(x):
     if x.startswith("son of whyachi"):
@@ -167,7 +127,7 @@ def createDB()->None:
         populate_robotinfo(session)
         populate_stats(session)       
 
-if "battlebots.db" not in os.listdir("bts/instance/"):
+if "instance/battlebots.db" not in os.listdir("bts/"):
     createDB()
 
 
