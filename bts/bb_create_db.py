@@ -161,6 +161,7 @@ def createDB()->None:
     #print(os.getenv("DB_URI"))
     
     engine = create_engine("postgresql://battlebots_user:dPXnx39QSLYTCVEJReQSt4B75BzctaDK@dpg-d2ubicvfte5s73b0tebg-a/battlebots")
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     with Session(engine) as session:
         populate_season(session)
