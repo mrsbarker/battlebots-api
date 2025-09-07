@@ -1,15 +1,16 @@
 from sqlalchemy import ForeignKey, UniqueConstraint, create_engine, select
 #import sqlalchemy
-from os import listdir
+
+import os
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 from json import dump, loads
 
 # declare global variables
-file = "json/bb-stats.json"
+file = "bts/json/bb-stats.json"
 with open(file, "r") as f:
     RAW_STATS = loads(f.read())
 
-file = "json/bb-base.json"
+file = "bts/json/bb-base.json"
 with open(file, "r") as f:
     RAW_INFO = loads(f.read())
 
@@ -157,15 +158,17 @@ def populate_stats(session:Session)->None:
                 
 # create database
 def createDB()->None:
-    engine = create_engine("sqlite:///instance/battlebots.db")
+    print(os.getenv("DB_URI"))
+    
+    engine = create_engine("postgresql://battlebots_user:dPXnx39QSLYTCVEJReQSt4B75BzctaDK@dpg-d2ubicvfte5s73b0tebg-a/battlebots")
     Base.metadata.create_all(engine)
     with Session(engine) as session:
         populate_season(session)
         populate_robotinfo(session)
         populate_stats(session)       
 
-if "battlebots.db" not in listdir("instance/"):
-    createDB()
+
+#createDB()
 
 
 
