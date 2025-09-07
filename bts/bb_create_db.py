@@ -168,7 +168,7 @@ def createDB()->None:
         populate_stats(session)       
 
 
-#createDB()
+createDB()
 
 
 
