@@ -4,7 +4,7 @@ from bts.bb_create_db import Robot, Season, Team, Stat, createDB
 from flask import Flask, jsonify, render_template, request
 from random import choice
 
-createDB()
+
 db = SQLAlchemy()
 app = Flask(__name__)
 
