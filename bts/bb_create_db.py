@@ -33,6 +33,7 @@ class Robot(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     robot_key: Mapped[str]
     robot: Mapped[str]
+    url: Mapped[str|None]
     year_id: Mapped[int] = mapped_column(ForeignKey("seasons.id"))
     type: Mapped[str] = mapped_column(nullable=True)
     UniqueConstraint("robot", "year_id", name="uniq1")
@@ -45,6 +46,7 @@ class Team(Base):
     team: Mapped[str]
     members: Mapped[str]
     hometown: Mapped[str]
+    img_url: Mapped[str|None]
 
 class Season(Base):
     __tablename__ = "seasons"
@@ -100,6 +102,8 @@ def populate_robotinfo(session:Session)->None:
             yr = k.split("(")[1].split(")")[0]
             yr_id = session.execute(select(Season).where(Season.year == yr)).scalar()
             new_bot = Robot(
+                url = v["url"],
+                img_url = v["img_url"],
                 robot_key = key_robo,
                 robot = temp_robo,
                 year_id = yr_id.id,

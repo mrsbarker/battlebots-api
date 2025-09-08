@@ -47,6 +47,7 @@ def get_info(dic:dict)->dict:
         dict_robot = {}
         dict_info = {}
         if v != "#":
+            dict_info["url"] = v
             r = requests.get(v, verify=False)
             # get robot info
             soup = BeautifulSoup(r.text.encode("utf-8"), features="html.parser")
@@ -80,6 +81,8 @@ def get_info(dic:dict)->dict:
                             val2 = val2[0]
                         val = val2
                 dict_info[key] = val
+                # get photo url
+                #dict_info["img_url"] = ??
             dict_robot[i] = dict_info
             lst_robots.append(dict_robot)
     return lst_robots    
