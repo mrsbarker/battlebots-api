@@ -63,6 +63,7 @@ def find_bots():
     temp = db.session.execute(db.select(Robot).where(Robot.robot == query)).scalars().all()
     if temp:
         test = {}
+        seasons = []
         for bot in temp:
             seasn = db.session.execute(db.select(Season).where(Season.id == bot.year_id)).scalar()
             team = db.session.execute(db.select(Team).where(Team.robot_id == bot.id)).scalar()
@@ -71,15 +72,18 @@ def find_bots():
                         "type": bot.type,
                         "team": team.team,
                         "team members": team.members,
+                        "season": seasn.season,
                         "season matches": getattr(stats, "matches", "N/A"),
                         "season wins": getattr(stats, "wins", "N/A"),
                         "season losses": getattr(stats, "losses", "N/A"),
                         "season knockouts": getattr(stats, "knockouts", "N/A"),
                         "knockout time (avg.)": getattr(stats, "avg_ko_time", "N/A"),
                         "knocked out": getattr(stats, "knocked_out", "N/A"),
-                        "judges decision wins": getattr(stats, "judged_win", "N/A")}
-            test[f"Season {seasn.season}"] = bot_json
-        bot_dict = {query: test}
+                        "judges decision wins": getattr(stats, "judged_win", "N/A"),
+                        "url": getattr(bot, "url", "https://battlebots.com/"),
+                        "url_img": team.img_url}
+            seasons.append(bot_json)
+        bot_dict = {query: {"seasons": seasons}}
         return jsonify(Battlebot = bot_dict), 200
     else:
         res = {"Not found": "Sorry this robot was not found please check your spelling and/or capitalization."}

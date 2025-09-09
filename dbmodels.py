@@ -12,6 +12,7 @@ class Robot(Base):
     robot: Mapped[str]
     year_id: Mapped[int] = mapped_column(ForeignKey("seasons.id"))
     type: Mapped[str] = mapped_column(nullable=True)
+    url: Mapped[str|None]
     UniqueConstraint("robot", "year_id", name="uniq1")
 
 class Team(Base):
@@ -22,6 +23,7 @@ class Team(Base):
     team: Mapped[str]
     members: Mapped[str]
     hometown: Mapped[str]
+    img_url: Mapped[str|None]
 
 class Season(Base):
     __tablename__ = "seasons"
