@@ -36,7 +36,7 @@ def get_random():
                 "team members": team.members,
                 "season matches": getattr(stats, "matches", "N/A"),
                 "season wins": getattr(stats, "wins", "N/A")}
-    return jsonify(Battlebot = bot_json)
+    return jsonify(query = bot_json)
 
 @app.route("/all-robots")
 def get_all_bots():
@@ -66,6 +66,7 @@ def find_bots():
     temp = db.session.execute(db.select(Robot).where(Robot.robot == query)).scalars().all()
     if temp:
         test = {}
+        seasons = []
         for bot in temp:
             seasn = db.session.execute(db.select(Season).where(Season.id == bot.year_id)).scalar()
             team = db.session.execute(db.select(Team).where(Team.robot_id == bot.id)).scalar()
@@ -74,6 +75,7 @@ def find_bots():
                         "type": bot.type,
                         "team": team.team,
                         "team members": team.members,
+                        "season": seasn.season,
                         "season matches": getattr(stats, "matches", "N/A"),
                         "season wins": getattr(stats, "wins", "N/A"),
                         "season losses": getattr(stats, "losses", "N/A"),
@@ -81,8 +83,9 @@ def find_bots():
                         "knockout time (avg.)": getattr(stats, "avg_ko_time", "N/A"),
                         "knocked out": getattr(stats, "knocked_out", "N/A"),
                         "judges decision wins": getattr(stats, "judged_win", "N/A")}
-            test[f"Season {seasn.season}"] = bot_json
-        bot_dict = {query: test}
+            seasons.append(bot_json)
+        season_dict = {"seasons": seasons}
+        bot_dict = {query: season_dict}
         return jsonify(Battlebot = bot_dict), 200
     else:
         res = {"Not found": "Sorry this robot was not found please check your spelling and/or capitalization."}
