@@ -167,9 +167,11 @@ def populate_stats(session:Session)->None:
                         session.commit()
                 
 # create database
-def createDB()->None:
-    
-    engine = create_engine(DB_URL)
+def createDB(url=None)->None:
+    if url == None:
+        engine = create_engine(DB_URL)
+    else:
+        engine = create_engine(url)
     Base.metadata.create_all(engine)
     with Session(engine) as session:
         populate_season(session)

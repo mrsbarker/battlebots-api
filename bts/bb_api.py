@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request
 from random import choice
 
 if "battlebots.db" not in os.listdir("instance/"):
-    createDB()
+    createDB(os.getenv("CREATE_DB_URL"))
 
 db = SQLAlchemy()
 app = Flask(__name__)
