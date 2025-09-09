@@ -83,7 +83,8 @@ def find_bots():
                         "url": getattr(bot, "url", "https://battlebots.com/"),
                         "url_img": team.img_url}
             seasons.append(bot_json)
-        bot_dict = {query: {"seasons": seasons}}
+        bot_dict = {"robot": query,
+                    "seasons": seasons}
         return jsonify(Battlebot = bot_dict), 200
     else:
         res = {"Not found": "Sorry this robot was not found please check your spelling and/or capitalization."}
