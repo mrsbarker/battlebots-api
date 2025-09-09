@@ -3,6 +3,13 @@ from json import dump, load
 import requests
 from bs4 import BeautifulSoup
 import re as re
+import os
+from dotenv import load_dotenv
+
+#get environment variable
+load_dotenv("./.env")
+cert_path = os.getenv("CERT_PATH")
+#cert_key = os.getenv("CERT_KEY")
 
 def dump_to(dic:dict, f:str)->None:
     with open(f"bts/json/{f}", "w") as file:
@@ -24,10 +31,10 @@ def robot_links()->dict:
     # list comprehension of urls for seasons of interest
     urls = [f"https://battlebots.com/{year}-season-robots/" for year in [2021, 2020, 2019, 2018]]
     [urls.append(f"https://battlebots.com/season-{x}-robots/") for x in range(1,3)]
-    dict_links = {}
+    dict_links = {} 
     # loop through season"s url
     for url in urls:
-        r = requests.get(url, verify=False)
+        r = requests.get(url, verify=cert_path)
         soup = BeautifulSoup(r.text.encode("utf-8"), features="html.parser")
         robo_soup = soup.find(id="main-content").find_all([h4_and_title, anchor_w_view])
     # create key,val pairs based on tag type
@@ -48,9 +55,11 @@ def get_info(dic:dict)->dict:
         dict_info = {}
         if v != "#":
             dict_info["url"] = v
-            r = requests.get(v, verify=False)
+            r = requests.get(v, verify=cert_path)
             # get robot info
             soup = BeautifulSoup(r.text.encode("utf-8"), features="html.parser")
+            # get photo url
+            dict_info["img_url"] = soup.find("div",id="main").img["src"]
             for temp in soup.find_all("strong"):          
                 key = temp.get_text().strip(":") 
                 if temp.parent.name == "p":
@@ -81,8 +90,7 @@ def get_info(dic:dict)->dict:
                             val2 = val2[0]
                         val = val2
                 dict_info[key] = val
-                # get photo url
-                #dict_info["img_url"] = ??
+                
             dict_robot[i] = dict_info
             lst_robots.append(dict_robot)
     return lst_robots    
@@ -106,7 +114,7 @@ def get_stats(dic:dict)->dict:
         else:
             dict_bots[bot] = {}
             if v != "#":
-                r = requests.get(v, verify=False,)
+                r = requests.get(v, verify=cert_path)
                 soup = BeautifulSoup(r.text.encode("utf-8"), features="html.parser")
                 # find Stat history then next element that is table
                 tbl = soup.find("table")
@@ -135,11 +143,13 @@ def get_stats(dic:dict)->dict:
 def main():
     # last run 09/07/2025
     # run web requests to get robot links
-    dump_to(robot_links(), "bb-links.json")
+    #dump_to(robot_links(), "bb-links.json")
     # read from newly created json file
+    print("File is running...")
     with open("bts/json/bb-links.json", "r") as f:
         dict_links = load(f)
     # create json file for battlebots data
     dump_to(get_info(dict_links), "bb-base.json")
     dump_to(get_stats(dict_links), "bb-stats.json")
+
 

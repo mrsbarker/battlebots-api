@@ -1,9 +1,11 @@
-
+import os
 from flask_sqlalchemy import SQLAlchemy
-from bts.bb_create_db import Robot, Season, Team, Stat
+from bb_create_db import Robot, Season, Team, Stat, createDB
 from flask import Flask, jsonify, request
 from random import choice
 
+if "battlebots.db" not in os.listdir("instance/"):
+    createDB()
 
 db = SQLAlchemy()
 app = Flask(__name__)
@@ -82,7 +84,9 @@ def find_bots():
                         "season knockouts": getattr(stats, "knockouts", "N/A"),
                         "knockout time (avg.)": getattr(stats, "avg_ko_time", "N/A"),
                         "knocked out": getattr(stats, "knocked_out", "N/A"),
-                        "judges decision wins": getattr(stats, "judged_win", "N/A")}
+                        "judges decision wins": getattr(stats, "judged_win", "N/A"),
+                        "url": getattr(bot, "url", "N/A"),
+                        "url_img": getattr(team, "img_url", "N/A")}
             seasons.append(bot_json)
         season_dict = {"seasons": seasons}
         bot_dict = {query: season_dict}

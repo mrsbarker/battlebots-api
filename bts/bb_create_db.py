@@ -2,9 +2,13 @@ from sqlalchemy import ForeignKey, UniqueConstraint, create_engine, select
 import os
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 from json import dump, loads
-from bts.bb_scrape import main
+from bb_scrape import main
+from dotenv import load_dotenv
 
 # declare global variables
+load_dotenv("./.env")
+DB_URL = os.getenv("CREATE_DB_URL")
+
 if os.listdir("bts/json") == []:
     main()
 
@@ -103,7 +107,6 @@ def populate_robotinfo(session:Session)->None:
             yr_id = session.execute(select(Season).where(Season.year == yr)).scalar()
             new_bot = Robot(
                 url = v["url"],
-                img_url = v["img_url"],
                 robot_key = key_robo,
                 robot = temp_robo,
                 year_id = yr_id.id,
@@ -116,7 +119,8 @@ def populate_robotinfo(session:Session)->None:
                 robot_id = new_bot.id,
                 team = v["Team"][0],
                 members = " | ".join(v["Team"][1:]),
-                hometown = v["Hometown"]
+                hometown = v["Hometown"],
+                img_url = v["img_url"]
             )
             session.add(new_team)
             session.commit()
@@ -164,17 +168,12 @@ def populate_stats(session:Session)->None:
                 
 # create database
 def createDB()->None:
-    engine = create_engine("sqlite:///instance/battlebots.db")
+    
+    engine = create_engine(DB_URL)
     Base.metadata.create_all(engine)
     with Session(engine) as session:
         populate_season(session)
         populate_robotinfo(session)
         populate_stats(session)       
 
-if "battlebots.db" not in os.listdir("bts/instance/"):
-    createDB()
-
-
-
-   
 
