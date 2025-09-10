@@ -94,7 +94,7 @@ def get_everything():
     lst = []
     sql_bots = db.session.execute(db.select(Robot).order_by(Robot.robot,Robot.year_id)).scalars().all()
     key_bots = []
-    [key_bots(x.robot) for x in sql_bots if x not in sql_bots]
+    [key_bots.append(x.robot) for x in sql_bots if x not in sql_bots]
     for key in key_bots:
         temp = db.session.execute(db.select(Robot).where(Robot.robot == key)).scalars().all()
         if temp:
