@@ -88,40 +88,6 @@ def find_bots():
     else:
         res = {"Not found": "Sorry this robot was not found please check your spelling and/or capitalization."}
         return jsonify(error = res), 404
-
-@app.route("/all-details")
-def get_everything():
-    lst = []
-    sql_bots = db.session.execute(db.select(Robot).order_by(Robot.robot,Robot.year_id)).scalars().all()
-    key_bots = []
-    [key_bots.append(x.robot) for x in sql_bots if x.robot not in key_bots]
-    for key in key_bots:
-        temp = db.session.execute(db.select(Robot).where(Robot.robot == key)).scalars().all()
-        if temp:
-            seasons = []
-            for bot in temp:
-                seasn = db.session.execute(db.select(Season).where(Season.id == bot.year_id)).scalar()
-                team = db.session.execute(db.select(Team).where(Team.robot_id == bot.id)).scalar()
-                stats = db.session.execute(db.select(Stat).where(Stat.robot_id == bot.id)).scalar()
-                bot_json = {"year": seasn.year,
-                            "type": bot.type,
-                            "team": team.team,
-                            "team members": team.members,
-                            "season": seasn.season,
-                            "season matches": getattr(stats, "matches", "N/A"),
-                            "season wins": getattr(stats, "wins", "N/A"),
-                            "season losses": getattr(stats, "losses", "N/A"),
-                            "season knockouts": getattr(stats, "knockouts", "N/A"),
-                            "knockout time (avg.)": getattr(stats, "avg_ko_time", "N/A"),
-                            "knocked out": getattr(stats, "knocked_out", "N/A"),
-                            "judges decision wins": getattr(stats, "judged_win", "N/A"),
-                            "url": getattr(bot, "url", "https://battlebots.com/"),
-                            "url_img": team.img_url}
-                seasons.append(bot_json)
-            bot_dict = {"robot": bot,
-                        "seasons": seasons}
-            lst.append(bot_dict)
-    return jsonify(Battlebots = lst), 200
-
+        
 if __name__ == "__main__":
     app.run(debug=False)
