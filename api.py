@@ -120,7 +120,7 @@ def get_everything():
                 seasons.append(bot_json)
             bot_dict = {"robot": bot,
                         "seasons": seasons}
-        lst.append(bot_dict)
+            lst.append(bot_dict)
     return jsonify(Battlebots = lst), 200
 
 if __name__ == "__main__":
