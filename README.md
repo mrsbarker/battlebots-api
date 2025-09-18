@@ -7,7 +7,7 @@ Display familiarity with extract-transform-load method and various data analysis
 ### Technology
 Python is the language used in this project's associated files. Data was extracted from the battlebots website using Python web-scraping libraries: Requests and BeautifulSoup4. In addition to the expected data cleaning, special consideration had to be made as each season had a unique roster of robots and some robots have been competing since 2015. I wanted teams with long histories to be cataloged together (under one key) to track their growth and changes over a season. After the initial data cleaning and organizing, tables were uploaded to PostgresSQL database where a Flask app used as an API accesses + returns the data.
 
-Feel free to view the code for additional details on how I extracted and transformed the data to suit this project! Use the bts folder for cloning to create the base json files locally.
+Feel free to view the code for additional details on how I extracted and transformed the data to suit this project! Use the bts folder for forking to create the base json files locally.
 
 ### Results
 API (web-app) <br>
