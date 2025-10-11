@@ -4,7 +4,11 @@ from bb_create_db import Robot, Season, Team, Stat, createDB
 from flask import Flask, jsonify, request
 from random import choice
 
-if "battlebots.db" not in os.listdir("instance/"):
+if "instance" not in os.listdir("."):
+    os.mkdir("instance")
+    createDB(os.getenv("CREATE_DB_URL"))
+
+elif "battlebots.db" not in os.listdir("instance/"):
     createDB(os.getenv("CREATE_DB_URL"))
 
 db = SQLAlchemy()
